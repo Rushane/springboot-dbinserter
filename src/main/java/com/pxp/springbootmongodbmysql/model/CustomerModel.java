@@ -2,14 +2,14 @@ package com.pxp.springbootmongodbmysql.model;
 
 import java.util.List;
 
-public class StudentModel {
+public class CustomerModel {
 
     private String firstName;
     private String lastName;
     private String email;
     private List<CourseModel> courses;
 
-    public StudentModel() {
+    public CustomerModel() {
     }
 
     public String getFirstName() {
