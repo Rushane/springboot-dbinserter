@@ -68,11 +68,13 @@ public class CustomerService {
         Faker faker = new Faker();
         
     	
-        logger.info("Begin generation of data");
+        logger.info("*******************Begin generation of data*******************");
         
         List<Customer> customerArray = new ArrayList<>();
         
-    	for (int i = 0; i < 2; i++) {
+        
+        logger.info("**Inserting records into mysql db**");
+    	for (int i = 0; i < 10000; i++) {
     		Customer customer = new Customer();
     		customer.setFirstName(faker.name().firstName());
     		customer.setLastName(faker.name().lastName());
@@ -84,8 +86,9 @@ public class CustomerService {
     	}
     	
     	List<Customer> returnedResults = customerRepository.saveAll(customerArray);
+    	logger.info("10000 Customer records added");
     	
-    	for (int i = 0; i < 2; i++) {
+    	for (int i = 0; i < 1000; i++) {
     		Account account = new Account();
     		Long accountNumber = faker.number().randomNumber(8, false);
     		
@@ -95,11 +98,26 @@ public class CustomerService {
     		account.setAccountCurrency(faker.currency().code());
     		account.setCustomer(returnedResults.get(i));
     		
-    		accountRepository.save(account);
-    		    				
+    		accountRepository.save(account);   		    				
+    	}
+    	logger.info("In Progress: Insertion of 1000 account records");
+    	
+    	for (int i = 0; i < 9000; i++) {
+    		Account account = new Account();
+    		Long accountNumber = faker.number().randomNumber(8, false);
+    		
+    		account.setAccountNumber(accountNumber.toString());
+    		account.setAccountBalance(faker.number().randomDouble(2, 0, 1000000));
+    		account.setAccountType(fakeValuesService.bothify("????##-accounttype"));
+    		account.setAccountCurrency(faker.currency().code());
+    		
+    		accountRepository.save(account);   		    				
     	}
     	
-    	for (int i = 0; i < 2; i++) {
+    	logger.info("In Progress: Insertion of 9000 account records");
+    	
+    	
+    	for (int i = 0; i < 1000; i++) {
     		Creditcard creditcard = new Creditcard();
     		Long accountNumber = faker.number().randomNumber(8, false);
     		
@@ -111,10 +129,28 @@ public class CustomerService {
     		creditcardRepository.save(creditcard);	    				
     	}
     	
+    	logger.info("In Progress: Insertion of 1000 creditcard records");
+    	
+    	for (int i = 0; i < 9000; i++) {
+    		Creditcard creditcard = new Creditcard();
+    		Long accountNumber = faker.number().randomNumber(8, false);
+    		
+    		creditcard.setCcType(faker.business().creditCardType());
+    		creditcard.setCcNumber(faker.business().creditCardNumber());
+    		creditcard.setExpiryDate(faker.date().future(200, TimeUnit.DAYS));
+    		
+    		creditcardRepository.save(creditcard);	    				
+    	}
+    	
+    	logger.info("In Progress: Insertion of 9000 creditcard records");
+    	
+    	logger.info("**Insertion of records into mysql db complete**");
+    	
     	
     	List<CustomerDocument> customerDocumentArray = new ArrayList<>();
     	
-    	for (int i = 0; i < 2; i++) {
+    	logger.info("**Inserting records into mongodb**");
+    	for (int i = 0; i < 10000; i++) {
     		CustomerDocument customerDocument = new CustomerDocument();
     		customerDocument .setFirstName(faker.name().firstName());
     		customerDocument .setLastName(faker.name().lastName());
@@ -127,8 +163,11 @@ public class CustomerService {
     	}
     	
     	List<CustomerDocument> returnedDocumentResults = customerDocumentRepository.saveAll(customerDocumentArray);
+    	logger.info("10000 Customer Documents added");
     	
-    	for (int i = 0; i < 2; i++) {
+    	
+    	logger.info("In Progress: Insertion of 1000 account document records");
+    	for (int i = 0; i < 1000; i++) {
     		AccountDocument accountDocument = new AccountDocument();
     		Long accountNumber = faker.number().randomNumber(8, false);
     		
@@ -141,9 +180,22 @@ public class CustomerService {
     		accountDocumentRepository.save(accountDocument);	    				
     	}
     	
-    	for (int i = 0; i < 2; i++) {
-    		CreditCardDocument creditCardDocument = new CreditCardDocument();
+    	logger.info("In Progress: Insertion of 9000 account document records");
+    	for (int i = 0; i < 9000; i++) {
+    		AccountDocument accountDocument = new AccountDocument();
     		Long accountNumber = faker.number().randomNumber(8, false);
+    		
+    		accountDocument.setAccountNumber(accountNumber.toString());
+    		accountDocument.setAccountBalance(faker.number().randomDouble(2, 0, 1000000));
+    		accountDocument.setAccountType(fakeValuesService.bothify("????##-accountDocumenttype"));
+    		accountDocument.setAccountCurrency(faker.currency().code());
+    		
+    		accountDocumentRepository.save(accountDocument);	    				
+    	}
+    	
+    	logger.info("In Progress: Insertion of 1000 credit card document records");
+    	for (int i = 0; i < 1000; i++) {
+    		CreditCardDocument creditCardDocument = new CreditCardDocument();
     		
     		creditCardDocument.setCcType(faker.business().creditCardType());
     		creditCardDocument.setCcNumber(faker.business().creditCardNumber());
@@ -153,7 +205,22 @@ public class CustomerService {
     		creditCardDocumentRepository.save(creditCardDocument);	    				
     	}
     	
+    	logger.info("In Progress: Insertion of 9000 credit card document records");
+    	for (int i = 0; i < 9000; i++) {
+    		CreditCardDocument creditCardDocument = new CreditCardDocument();
+    		
+    		creditCardDocument.setCcType(faker.business().creditCardType());
+    		creditCardDocument.setCcNumber(faker.business().creditCardNumber());
+    		creditCardDocument.setExpiryDate(faker.date().future(200, TimeUnit.DAYS));
+    		creditCardDocument.setCustomerDocument(returnedDocumentResults.get(i));
+    		
+    		creditCardDocumentRepository.save(creditCardDocument);	    				
+    	}
+    	
+    	logger.info("**Insertion of records into mongodb complete**");
+    	
     	logger.info("End generation of data");
+    	logger.info("*******************End generation of data*******************");
 
     	return "Data sucessfully inserted!";
     }
